@@ -3,11 +3,11 @@
 void scanI2C()
 {
     byte error, address;
-    int nDevices;
+    int deviceCount;
 
     Serial.println("Scanning...");
 
-    nDevices = 0;
+    deviceCount = 0;
     for (address = 1; address < 127; address++)
     {
         Wire.beginTransmission(address);
@@ -20,7 +20,7 @@ void scanI2C()
                 Serial.print("0");
             Serial.print(address, HEX);
             Serial.println(" ");
-            nDevices++;
+            deviceCount++;
         }
         else if (error == 4)
         {
@@ -30,7 +30,7 @@ void scanI2C()
             Serial.println(address, HEX);
         }
     }
-    if (nDevices == 0)
+    if (deviceCount == 0)
         Serial.println("No I2C devices found.\n");
     else
         Serial.println("Done.\n");
@@ -179,28 +179,31 @@ void configureI2C()
                 global.test3Touch = false;
             }
         }
-        // send the configuration
+        // Create the config buffer
         setConfig(config, DebounceTable[global.debounce], SensitivityTable[global.sensitivity]);
+
+        // Write the config buffer
         command = REGMAP_ORIGIN;
         if (!writeI2C(SLAVE_ADDR, command, config, 128))
         {
             Serial.println("Failed to update config.");
             continue; // try again
         }
-        // save
+
+        // Calculate and compare checksum on slave
         command = CTRL_CMD;
-        data[0] = SAVE_CHECK_CRC;
+        data[0] = SAVE_CHECK_CRC; // 
         if (!writeI2C(SLAVE_ADDR, command, data, 1))
         {
             Serial.println("Failed to calculate checksum");
             continue; // try again
         }
-        // wait for 220ms
-        // read error of command 0-no error, 254 - crc error
+        // Wait for 220ms according to datasheet 
+        // Retrieve checksum error: 0-no error, 254 - crc error
         command = CTRL_CMD_ERROR;
         if (!readI2C(SLAVE_ADDR, command, data, 1))
         {
-            Serial.println("Failed to verify checksum.");
+            Serial.println("Failed to read CRC error code.");
             continue; // try again
         }
         if (data[0] != COMMAND_SUCCESS)
@@ -209,7 +212,7 @@ void configureI2C()
             Serial.println("Checksum Error.");
             continue; // try again
         }
-        // reset
+        // The device resets itself 
         command = CTRL_CMD;
         data[0] = SW_RESET;
         if (!writeI2C(SLAVE_ADDR, command, data, 1))
@@ -217,12 +220,12 @@ void configureI2C()
             Serial.println("Reset failed.");
             continue; // try again
         }
-        // success
         Serial.printf("CY8MBR Configuration succeeded. Try: %d\n", (3 - retry));
         break;
     }
 }
 
+// Undeveloped
 void testCapacitanceI2C()
 {
     uint8_t i;
@@ -235,7 +238,6 @@ void testCapacitanceI2C()
     command = FSS_EN;
     data[0] = 0;
     data[1] = 0;
-    //			do{
     writeI2C(SLAVE_ADDR, command, data, 2);
     delay(160);
 }

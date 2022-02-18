@@ -10,13 +10,11 @@ void IRAM_ATTR buttonInput()
 
 void setup()
 {
-	// attachInterrupt(BUTTON_INTERRUPT, buttonInput, FALLING);
 	Serial.begin(115200);
-	while (!Serial)
-	{};
+	while (!Serial){};
 	initI2C();
 	scanI2C();
-	configureI2C(); 
+	configureI2C();
 }
 
 void loop()
