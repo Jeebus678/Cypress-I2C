@@ -1,6 +1,19 @@
 #ifndef _BUTTONVARS_H_
 #define _BUTTONVARS_H_
 
+
+/* 
+
+        BUTTON SETUP
+        ___ POWER ___ 
+       |      4      |
+  33  MODE           + 8
+       |             |
+  64  VENT           - 2
+       |_____________|
+
+*/
+
 #define REGMAP_ORIGIN			0x00
 #define SENSOR_PATTERN			0x00
 #define FSS_EN					0x02
@@ -80,7 +93,26 @@
 #define CONFIG_CRC				0x7E
 #define GPO_OUTPUT_STATE		0x80
 #define SENSOR_ID				0x82
+
+/* CTRL_CMD op codes for the command to execute:           
+0: There is no command currently executing. The device writes this value at startup and upon
+completion of any command.
+2: The device calculates a CRC checksum over the configuration data in this register map and
+compares the result with the content of CONFIG_CRC. If the two values match, the device saves
+the configuration and the CRC checksum to nonvolatile memory.
+3: The device calculates a CRC checksum over the configuration data in this register map and
+places the result in the CALC_CRC register. Note that this command is only for test and debug,
+and its use is not recommended for production configurations. Use EzClick or Host APIs to calculate CRC for production configurations. Refer CY8CMBR3xxx Design Guide for more details.
+7: The device discontinues scanning and enters the low power mode. The device will exit this
+mode upon an I2C address match event.
+8: The device sets the contents of LATCHED_BUTTON_STAT and LATCHED_PROX_STAT to
+0 and sets the contents of LIFTOFF_SLIDER1_POSITION and LIFTOFF_SLIDER2_POSITION
+to 0xFF.
+9: The device resets the Advanced Low Pass filter for proximity sensor PS0
+10: The device resets the Advanced Low Pass filter for proximity sensor PS1
+255: The device resets itself */
 #define CTRL_CMD				0x86
+
 #define CTRL_CMD_ERROR			0x89
 #define DEVICE_ID				0x90
 #define CALC_CRC_RESULT			0x94
