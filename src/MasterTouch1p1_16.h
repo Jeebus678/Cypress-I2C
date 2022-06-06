@@ -1,5 +1,3 @@
-/* Project: C:\Users\Michael\Dropbox\Projlocal\SwitchBeeDB\AP_SL\EU_OMFA_CY2\src\MasterTouch1p1_16.cprj
- * Generated: 20-Apr-21 6:21:16 PM +03:00 */
 const unsigned char CY8CMBR3116_LQXI_configuration[128] = {
     0xC1u, 0x1Du, 0xC0u, 0x1Du, 0x00u, 0x00u, 0x00u, 0x00u,
     0x00u, 0x00u, 0x00u, 0x00u, 0x80u, 0x7Fu, 0x7Fu, 0x7Fu,
