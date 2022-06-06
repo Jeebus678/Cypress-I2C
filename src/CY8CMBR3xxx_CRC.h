@@ -1,10 +1,3 @@
-/*
- * CY8CMBR3xxx_CRC.h
- *
- *  Created on: 5 αιεμι 2020
- *      Author: Michael
- */
-
 #ifndef SRC_CY8CMBR3XXX_CRC_H_
 #define SRC_CY8CMBR3XXX_CRC_H_
 
